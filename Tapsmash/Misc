@@ -1,0 +1,105 @@
+//// ********************* YOUTUBE
+
+-(void)showYoutubeVideo {
+
+NSArray *reversedArray = [[self.contentArray reverseObjectEnumerator] allObjects];
+PFObject *currentContent = [reversedArray objectAtIndex:currentIndex];
+
+
+self.view.backgroundColor = [UIColor blackColor];
+//self.playerView.hidden = NO;
+self.playerView.delegate = self;
+self.playerView.backgroundColor = [UIColor blackColor];
+NSDictionary *playerVars = @{@"controls" : @1,@"playsinline" : @1,@"autohide" : @1,@"showinfo" : @0,@"modestbranding" : @0};
+[self.playerView loadWithVideoId:[self extractYoutubeIdFromLink:[currentContent objectForKey:@"postLink"]] playerVars:playerVars];
+
+[self createCloseButton];
+[self.view addSubview:self.indicator];
+[self.indicator setHidden:NO];
+[self.indicator startAnimating];
+[self performSelector:@selector(addYoutubeView) withObject:nil afterDelay:1.0];
+}
+
+- (NSString *)extractYoutubeIdFromLink:(NSString *)link {
+
+NSString *regexString = @"((?<=(v|V)/)|(?<=be/)|(?<=(\\?|\\&)v=)|(?<=embed/))([\\w-]++)";
+NSRegularExpression *regExp = [NSRegularExpression regularExpressionWithPattern:regexString
+options:NSRegularExpressionCaseInsensitive
+error:nil];
+
+NSArray *array = [regExp matchesInString:link options:0 range:NSMakeRange(0,link.length)];
+if (array.count > 0) {
+NSTextCheckingResult *result = array.firstObject;
+return [link substringWithRange:result.range];
+}
+return nil;
+}
+
+-(void)addYoutubeView {
+
+[self.indicator stopAnimating];
+self.playerView.hidden = NO;
+[self.view bringSubviewToFront:self.playerView];
+
+}
+//// ********************* YOUTUBE
+
+
+
+-(void)showWebviewContent {
+
+PFObject *currentContent = [self.contentArray objectAtIndex:currentIndex];
+
+if (floor(NSFoundationVersionNumber) < NSFoundationVersionNumber_iOS_7_1) {
+
+self.regWebview = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+self.regWebview.backgroundColor = [UIColor blackColor];
+self.regWebview.scrollView.decelerationRate = UIScrollViewDecelerationRateNormal;
+self.regWebview.delegate = self;
+self.regWebview.scrollView.bounces = YES;
+self.regWebview.scrollView.scrollEnabled = NO;
+//self.webview.userInteractionEnabled = NO;
+//[self.regWebview addObserver:self forKeyPath:@"estimatedProgress" options:NSKeyValueObservingOptionNew context:NULL];
+
+NSString *urlString = [currentContent objectForKey:@"postLink"];
+NSURL *url = [NSURL URLWithString:urlString];
+NSURLRequest *request = [NSURLRequest requestWithURL:url];
+[self.regWebview loadRequest:request];
+[self.view addSubview:self.regWebview];
+
+[self.regWebview addSubview:self.indicator];
+[self.indicator setHidden:NO];
+[self.indicator startAnimating];
+
+}
+
+else {
+
+NSString *source = @"document.body.style.background = \"#000000\";";
+WKWebViewConfiguration *config = [[WKWebViewConfiguration alloc] init];
+WKUserContentController *controller = [[WKUserContentController alloc] init];
+config.userContentController = controller;
+WKUserScript *script = [[WKUserScript alloc] initWithSource:source injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:YES];
+[controller addUserScript:script];
+
+self.webview = [[WKWebView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) configuration:config];  ///MADE THIS * 2
+
+self.webview.backgroundColor = [UIColor blackColor];
+self.webview.scrollView.decelerationRate = UIScrollViewDecelerationRateNormal;
+self.webview.navigationDelegate = self;
+self.webview.scrollView.bounces = YES;
+self.webview.scrollView.scrollEnabled = NO;
+//self.webview.userInteractionEnabled = NO;
+[self.webview addObserver:self forKeyPath:@"estimatedProgress" options:NSKeyValueObservingOptionNew context:NULL];
+
+NSString *urlString = [currentContent objectForKey:@"postLink"];
+NSURL *url = [NSURL URLWithString:urlString];
+NSURLRequest *request = [NSURLRequest requestWithURL:url];
+[self.webview loadRequest:request];
+[self.view addSubview:self.webview];
+
+[self.webview addSubview:self.indicator];
+[self.indicator setHidden:NO];
+[self.indicator startAnimating];
+}
+}

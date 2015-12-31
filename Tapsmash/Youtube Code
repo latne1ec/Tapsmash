@@ -1,0 +1,39 @@
+-(void)showYoutubeVideo {
+
+PFObject *currentContent = [self.contentArray objectAtIndex:currentIndex];
+NSString *link = [currentContent objectForKey:@"postLink"];
+
+self.subtitleLabel.text = [currentContent objectForKey:@"postTitle"];
+
+self.view.backgroundColor = [UIColor blackColor];
+//self.playerView.hidden = NO;
+self.playerView.delegate = self;
+self.playerView.backgroundColor = [UIColor blackColor];
+NSDictionary *playerVars = @{@"controls" : @1,@"playsinline" : @1,@"autohide" : @1,@"showinfo" : @0,@"modestbranding" : @0};
+[self.playerView loadWithVideoId:[self extractYoutubeIdFromLink:link] playerVars:playerVars];
+
+[self.view addSubview:self.indicator];
+[self.indicator setHidden:NO];
+[self.indicator startAnimating];
+[self performSelector:@selector(addYoutubeView) withObject:nil afterDelay:1.0];
+
+}
+
+-(void)addYoutubeView {
+
+[self.indicator stopAnimating];
+self.playerView.hidden = NO;
+[self.view bringSubviewToFront:self.playerView];
+[self.view bringSubviewToFront:self.subtitleLabel];
+
+UIButton *buttonTwo = [[UIButton alloc] init];
+buttonTwo.frame = CGRectMake(self.view.frame.size.height/2, self.playerView.frame.size.width/2-100, 200, 100);
+[buttonTwo setTitleColor:[UIColor colorWithWhite:1 alpha:0.94] forState:UIControlStateNormal];
+[buttonTwo setTitleColor:[UIColor colorWithWhite:1 alpha:0.94] forState:UIControlStateSelected];
+buttonTwo.titleLabel.font = [UIFont fontWithName:@"AvenirNext-Bold" size:22];
+buttonTwo.titleLabel.numberOfLines = 2;
+[buttonTwo.titleLabel setTextAlignment:NSTextAlignmentCenter];
+[buttonTwo setTitle:@"home" forState:UIControlStateNormal];
+[buttonTwo addTarget:self action:@selector(didCloseButtonTouch) forControlEvents:UIControlEventTouchUpInside];
+[self.playerView addSubview:buttonTwo];
+}

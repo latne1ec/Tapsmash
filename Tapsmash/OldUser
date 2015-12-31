@@ -1,0 +1,34 @@
+//    if ([PFUser currentUser]) {
+//
+//        int currentUserScore = [[[NSUserDefaults standardUserDefaults] objectForKey:@"localUserScore"] intValue];
+//        NSString *newString = [NSString stringWithFormat:@"%d", currentUserScore];
+//        self.scoreLabel.text = newString;
+//
+//        [[PFUser currentUser] incrementKey:@"runCount"];
+//        [[PFUser currentUser] setObject:[NSNumber numberWithInt:currentUserScore] forKey:@"userScore"];
+//        [[PFUser currentUser] saveInBackground];
+//
+//    } else {
+//
+//        NSString *userId = [[NSUserDefaults standardUserDefaults] objectForKey:@"userId"];
+//
+//        [PFUser enableAutomaticUser];
+//        [[PFUser currentUser] incrementKey:@"userScore" byAmount:[NSNumber numberWithInt:[[[NSUserDefaults standardUserDefaults] objectForKey:@"localUserScore"] intValue]]];
+//        [[PFUser currentUser] incrementKey:@"runCount"];
+//        [[PFUser currentUser] setObject:userId forKey:@"userId"];
+//        [[PFUser currentUser] saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+//            if (error) {
+//            } else {
+//
+//                int currentUserScore = [[[NSUserDefaults standardUserDefaults] objectForKey:@"localUserScore"] intValue];
+//                NSString *newString = [NSString stringWithFormat:@"%d", currentUserScore];
+//                self.scoreLabel.text = newString;
+//
+//                PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+//                [currentInstallation setObject:[PFUser currentUser] forKey:@"user"];
+//                [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+//
+//                }];
+//            }
+//        }];
+//    }

@@ -1,0 +1,458 @@
+//
+//  ContentViewController.m
+//  Tapsmash
+//
+//  Created by Evan Latner on 11/17/15.
+//  Copyright © 2015 tapsmash. All rights reserved.
+//
+
+#import "ContentViewController.h"
+#import "SDWebImageManager.h"
+
+
+@interface ContentViewController ()
+
+@end
+
+@implementation ContentViewController
+
+int currentIndex;
+int currentSkipCount;
+
+
+-(BOOL)prefersStatusBarHidden {
+
+return YES;
+}
+
+- (void)viewDidLoad {
+[super viewDidLoad];
+
+self.view.backgroundColor = [UIColor blackColor];
+self.playerView.hidden = YES;
+[self queryForContent];
+
+self.tapTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap)];
+self.tapTap.delegate = (id)self;
+self.tapTap.numberOfTapsRequired = 1;
+self.tapTap.numberOfTouchesRequired = 1;
+self.tapTap.delaysTouchesBegan = YES;      //Important to add
+[self.view addGestureRecognizer:self.tapTap];
+
+self.qPlayer = [[AVQueuePlayer alloc] init];
+self.avPlayer = [[AVPlayer alloc] init];
+self.avPlayerItem = [AVPlayerItem alloc];
+self.urlAsset = [AVURLAsset alloc];
+
+UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(didCloseButtonTouch)];
+swipe.direction = UISwipeGestureRecognizerDirectionDown;
+[self.view addGestureRecognizer:swipe];
+
+self.qPlayer.actionAtItemEnd = AVPlayerActionAtItemEndNone;
+
+[[NSNotificationCenter defaultCenter] addObserver:self
+selector:@selector(playerItemDidReachEnd:)
+name:AVPlayerItemDidPlayToEndTimeNotification
+object:[self.qPlayer currentItem]];
+
+currentSkipCount = 0;
+
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillResignActive) name:UIApplicationWillResignActiveNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillTerminate) name:UIApplicationWillTerminateNotification object:nil];
+
+NSLog(@"LAST SEEN ID: %@", [[NSUserDefaults standardUserDefaults] objectForKey:@"lastSeenContentId"]);
+
+[self.navigationController setNavigationBarHidden:YES];
+
+self.subtitleLabel.adjustsFontSizeToFitWidth = YES;
+self.subtitleLabel.minimumScaleFactor = 0;
+
+}
+
+//-(void)appWillResignActive {
+//
+//    if (currentIndex+1 >= self.contentArray.count) {
+//
+//    } else {
+//        [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%d", currentSkipCount] forKey:@"currentSkipCount"];
+//        [[NSUserDefaults standardUserDefaults] synchronize];
+//    }
+//}
+//
+//-(void)appWillTerminate {
+//
+//    if (currentIndex+1 >= self.contentArray.count) {
+//
+//    } else {
+//        [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%d", currentSkipCount] forKey:@"currentSkipCount"];
+//        [[NSUserDefaults standardUserDefaults] synchronize];
+//    }
+//}
+
+-(void)viewWillDisappear:(BOOL)animated {
+
+if (currentIndex+1 >= self.contentArray.count) {
+
+} else {
+NSString *previousSkip = [[NSUserDefaults standardUserDefaults] objectForKey:@"currentSkipCount"];
+int previousSkipInt = [previousSkip intValue];
+
+//        [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%d", currentSkipCount + previousSkipInt] forKey:@"currentSkipCount"];
+//        [[NSUserDefaults standardUserDefaults] synchronize];
+
+PFObject *currentContent = [self.contentArray objectAtIndex:currentIndex];
+
+[[NSUserDefaults standardUserDefaults] setObject:currentContent.objectId forKey:@"lastSeenContentId"];
+[[NSUserDefaults standardUserDefaults] synchronize];
+}
+}
+
+
+-(void)viewWillAppear:(BOOL)animated {
+
+self.navigationController.navigationBar.backItem.hidesBackButton = YES;
+[self.navigationItem setHidesBackButton:YES animated:YES];
+currentIndex = 0;
+
+}
+
+-(void)handleSingleTap {
+
+currentSkipCount++;
+
+if (currentIndex+1 >= self.contentArray.count) {
+[[NSUserDefaults standardUserDefaults] setObject:@"0" forKey:@"currentSkipCount"];
+[[NSUserDefaults standardUserDefaults] synchronize];
+//[self didCloseButtonTouch];
+
+UIView *replayView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+[self.view addSubview:replayView];
+replayView.backgroundColor = [UIColor blackColor];
+UIButton *button = [[UIButton alloc] init];
+button.frame = CGRectMake(0, 0, 100, 100);
+button.center = self.view.center;
+[button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+[button setTitle:@"watch again" forState:UIControlStateNormal];
+[button addTarget:self action:@selector(replayShow) forControlEvents:UIControlEventTouchUpInside];
+[replayView addSubview:button];
+
+
+} else {
+
+//NSArray *reversedArray = [[self.contentArray reverseObjectEnumerator] allObjects];
+PFObject *currentContent = [self.contentArray objectAtIndex:currentIndex];
+
+PFObject *currentContent2 = [self.contentArray objectAtIndex:currentIndex+1];
+
+self.subtitleLabel.text = [currentContent2 objectForKey:@"postTitle"];
+self.contentCountLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.contentArray.count - currentIndex];
+
+currentIndex = currentIndex + 1;
+[self.qPlayer pause];
+[self displayContent];
+//self.imageView.image = [UIImage imageNamed:@"black"];
+//[self.qPlayer seekToTime:kCMTimeZero];
+
+if ([[currentContent objectForKey:@"postLink"] rangeOfString:@"vine"].location != NSNotFound) {
+[self.qPlayer advanceToNextItem];
+
+}
+}
+}
+
+-(void)replayShow {
+
+currentIndex = 0;
+currentSkipCount = 0;
+
+[self.contentArray removeAllObjects];
+[self queryForContent];
+
+}
+
+-(void)displayContent {
+
+//NSArray *reversedArray = [[self.contentArray reverseObjectEnumerator] allObjects];
+PFObject *currentContent = [self.contentArray objectAtIndex:currentIndex];
+
+if ([[currentContent objectForKey:@"postLink"] rangeOfString:@"vine"].location != NSNotFound) {
+[self playDasVideo];
+NSLog(@"Vine Video");
+}
+
+else {
+NSLog(@"Picture");
+[self showPicture];
+}
+
+NSLog(@"Current URL: %@",[currentContent objectForKey:@"postLink"]);
+}
+
+//// ********************* VINE
+
+-(void)playerItemDidReachEnd:(NSNotification *)notification  {
+
+AVPlayerItem *p = [notification object];
+[p seekToTime:kCMTimeZero];
+[self.avPlayer play];
+[self handleSingleTap];
+
+}
+
+-(void)playDasVideo {
+
+//NSArray *reversedArray = [[self.contentArray reverseObjectEnumerator] allObjects];
+PFObject *currentContent = [self.contentArray objectAtIndex:currentIndex];
+
+if ([[currentContent objectForKey:@"postLink"] rangeOfString:@"vine"].location != NSNotFound) {
+//[self.avPlayer play];
+self.imageView.hidden = YES;
+self.avPlayerLayer.hidden = NO;
+[self.qPlayer play];
+//[self.view bringSubviewToFront:self.subtitleLabel];
+self.subtitleLabel.hidden = YES;
+NSLog(@"Timer here");
+}
+
+else {
+[self.qPlayer pause];
+self.avPlayerLayer.hidden = YES;
+self.imageView.hidden = NO;
+}
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
+change:(NSDictionary *)change context:(void *)context {
+if (object == self.avPlayer && [keyPath isEqualToString:@"status"]) {
+if (self.avPlayer.status == AVPlayerStatusReadyToPlay) {
+[self.indicator stopAnimating];
+[self.avPlayer play];
+} else if (self.avPlayer.status == AVPlayerStatusFailed) {
+// something went wrong. player.error should contain some information
+}
+}
+
+if ([keyPath isEqualToString:@"estimatedProgress"] && object == self.webview) {
+CGFloat progress;
+progress = self.webview.estimatedProgress;
+
+if (progress > 0.97) {
+[self.indicator stopAnimating];
+}
+NSLog(@"Progress: %f", progress);
+}
+}
+
+-(void)preDownloadVideos {
+
+//NSArray* reversedArray = [[self.contentArray reverseObjectEnumerator] allObjects];
+for (PFObject *object in self.contentArray) {
+NSString *url = [object valueForKey:@"postLink"];
+if ([url rangeOfString:@"vine"].location != NSNotFound) {
+
+AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:[NSURL URLWithString:url] options:nil];
+NSArray *keys = @[@"playable", @"tracks",@"duration" ];
+
+[asset loadValuesAsynchronouslyForKeys:keys completionHandler:^() {
+// make sure everything downloaded properly
+
+for (NSString *thisKey in keys) {
+NSError *error = nil;
+AVKeyValueStatus keyStatus = [asset statusOfValueForKey:thisKey error:&error];
+if (keyStatus == AVKeyValueStatusFailed) {
+return ;
+}
+}
+
+AVPlayerItem *item = [[AVPlayerItem alloc] initWithAsset:asset];
+
+dispatch_async(dispatch_get_main_queue(), ^ {
+[self.qPlayer insertItem:item afterItem:nil];
+});
+}];
+}
+}
+
+self.avPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:self.qPlayer];
+[self.avPlayerLayer setFrame:self.view.frame];
+[self.view.layer addSublayer:self.avPlayerLayer];
+[self.qPlayer seekToTime:kCMTimeZero];
+[self.qPlayer play];
+}
+
+-(void)addVideosToQueuePlayer {
+
+//NSArray* reversedArray = [[self.contentArray reverseObjectEnumerator] allObjects];
+
+for (id object in [self.contentArray valueForKeyPath:@"awsUrl"]) {
+
+if ([object rangeOfString:@"vine"].location != NSNotFound) {
+NSLog(@"Vid");
+AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:[NSURL URLWithString:object] options:nil];
+self.avPlayerItem = [AVPlayerItem playerItemWithAsset:asset];
+[self.qPlayer insertItem:self.avPlayerItem afterItem:nil];
+[self.videoArray addObject:self.avPlayerItem];
+}
+}
+
+self.avPlayerLayer =[AVPlayerLayer playerLayerWithPlayer:self.qPlayer];
+[self.avPlayerLayer setFrame:self.view.frame];
+[self.view.layer addSublayer:self.avPlayerLayer];
+[self.qPlayer seekToTime:kCMTimeZero];
+[self.qPlayer play];
+
+}
+
+
+//// ********************* VINE
+
+
+-(void)showPicture {
+
+[self.avPlayer pause];
+self.avPlayerLayer.hidden = YES;
+self.imageView.hidden = NO;
+[self.view bringSubviewToFront:self.imageView];
+self.subtitleLabel.hidden = NO;
+self.imageView.image = [UIImage imageNamed:@"black"];
+
+//NSArray* reversedArray = [[self.contentArray reverseObjectEnumerator] allObjects];
+PFObject *currentContent = [self.contentArray objectAtIndex:currentIndex];
+
+SDWebImageManager *manager = [SDWebImageManager sharedManager];
+
+NSString *urlString = [currentContent objectForKey:@"postLink"];
+NSURL *url = [NSURL URLWithString:urlString];
+
+if ([manager cachedImageExistsForURL:url]) {
+NSLog(@"Already downloaded");
+NSData *data = [NSData dataWithContentsOfURL:url];
+self.imageView.image = [UIImage imageWithData:data];
+self.imageView.hidden = NO;
+[self.view bringSubviewToFront:self.imageView];
+[self.view bringSubviewToFront:self.contentCountLabel];
+[self.view bringSubviewToFront:self.subtitleLabel];
+
+} else {
+NSLog(@"NOT DOWNLOADED");
+[manager downloadImageWithURL:url options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+
+}
+completed:^(UIImage *images, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+
+
+NSLog(@"Showing the image");
+//self.imageView.image = [UIImage imageNamed:@"black"];
+self.imageView.image = images;
+self.imageView.hidden = NO;
+[self.view bringSubviewToFront:self.imageView];
+[self.view bringSubviewToFront:self.contentCountLabel];
+[self.view bringSubviewToFront:self.subtitleLabel];
+}];
+}
+}
+
+- (void)createCloseButton {
+
+self.closeButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)-70, 9.0, 74, 74)];
+[self.closeButton setImage:[UIImage imageNamed:@"close2"] forState:UIControlStateNormal];
+//[closeButton addTarget:self action:@selector(didCloseButtonTouch) forControlEvents:UIControlEventTouchUpInside];
+
+[self.playerView addSubview:self.closeButton];
+[self.webview addSubview:self.closeButton];
+
+UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(doThis:)];
+longPress.delegate = (id)self;
+longPress.minimumPressDuration = 0.01;
+[self.closeButton addGestureRecognizer:longPress];
+}
+
+-(void)doThis: (UILongPressGestureRecognizer *)recognizer {
+
+if (recognizer.state == UIGestureRecognizerStateBegan) {
+
+[UIView animateWithDuration:0.034 animations:^{
+NSLog(@"Started");
+self.closeButton.transform = CGAffineTransformMakeScale(1.42, 1.42);
+
+} completion:^(BOOL finished) {
+NSLog(@"FINISHED");
+self.closeButton.transform = CGAffineTransformMakeScale(1.32, 1.32);
+
+}];
+}
+if (recognizer.state == UIGestureRecognizerStateEnded) {
+
+[UIView animateWithDuration:0.034 animations:^{
+NSLog(@"Started");
+self.closeButton.transform = CGAffineTransformMakeScale(1.0, 1.0);
+
+} completion:^(BOOL finished) {
+NSLog(@"FINISHED");
+[self didCloseButtonTouch];
+}];
+}
+}
+
+- (void)didCloseButtonTouch {
+
+//[self dismissViewControllerAnimated:YES completion:nil];
+
+[self.navigationController popToRootViewControllerAnimated:NO];
+}
+
+-(void)queryForContent {
+
+PFQuery *query = [PFQuery queryWithClassName:@"Posts"];
+[query whereKey:@"postChannel" notEqualTo:@"nil"];
+//[query whereKey:@"postType" equalTo:@"image"];
+[query orderByDescending:@"createdAt"];
+
+NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+
+NSString *skipCountString = [prefs objectForKey:@"currentSkipCount"];
+if(skipCountString != nil){
+NSLog(@"Has ran app before");
+[query setSkip:[skipCountString intValue]];
+[query setLimit:100 - [skipCountString intValue]];
+} else {
+[query setLimit:100];
+}
+[query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+if (error) {
+} else {
+
+self.contentArray = [objects mutableCopy];
+
+NSArray* reversedArray = [[self.contentArray reverseObjectEnumerator] allObjects];
+
+//NSLog(@"REVERSED ARRAY: %@", reversedArray);
+
+self.contentArray = [reversedArray mutableCopy];
+
+
+[self downloadImages];
+[self preDownloadVideos];
+[self handleSingleTap];
+self.contentCountLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.contentArray.count];
+}
+}];
+}
+
+-(void)downloadImages {
+
+//NSArray* reversedArray = [[self.contentArray reverseObjectEnumerator] allObjects];
+for (PFObject *object in self.contentArray) {
+NSString *url = [object valueForKey:@"postType"];
+if ([url rangeOfString:@"image"].location != NSNotFound) {
+SDWebImageManager *manager = [SDWebImageManager sharedManager];
+[manager downloadImageWithURL:[NSURL URLWithString:url] options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+}
+completed:^(UIImage *images, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+NSLog(@"HERE: %@", images);
+}];
+}
+}
+}
+
+@end
