@@ -15,6 +15,7 @@
 
 @property (nonatomic, strong) AppDelegate *appDelegate;
 @property BOOL replayViewShowing;
+@property BOOL currentlyQuerying;
 @property (nonatomic, strong) UIView *replayView;
 
 @end
@@ -34,6 +35,7 @@ int currentSkipCount;
     _appDelegate = [[UIApplication sharedApplication] delegate];
     
     _replayViewShowing = false;
+    _currentlyQuerying = false;
     
     self.indicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
     self.indicator.frame = CGRectMake(0.0, 0.0, 40.0, 40.0);
@@ -132,6 +134,10 @@ int currentSkipCount;
      
         [self performSelector:@selector(fadehome) withObject:nil afterDelay:0.33];
         
+    }
+    
+    if (_currentlyQuerying) {
+        [self performSelector:@selector(fadehome) withObject:nil afterDelay:0.33];
     }
 }
 
@@ -354,6 +360,7 @@ int currentSkipCount;
     [self.view.layer addSublayer:self.avPlayerLayer];
     [self.avPlayer play];
     [self.view bringSubviewToFront:self.subtitleLabel];
+    [self.view bringSubviewToFront:self.likeButton];
     //[self.indicator setHidden:YES];
     //[self.indicator stopAnimating];
 
@@ -480,6 +487,7 @@ int currentSkipCount;
         [self.view bringSubviewToFront:self.contentCountLabel];
         [self.view bringSubviewToFront:self.bottomFade];
         [self.view bringSubviewToFront:self.subtitleLabel];
+        [self.view bringSubviewToFront:self.likeButton];
         
     } else {
         [managerOne downloadImageWithURL:url options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize) {
@@ -494,6 +502,7 @@ int currentSkipCount;
                         [self.view bringSubviewToFront:self.contentCountLabel];
                         [self.view bringSubviewToFront:self.bottomFade];
                         [self.view bringSubviewToFront:self.subtitleLabel];
+                        [self.view bringSubviewToFront:self.likeButton];
                     }];
         }
 }
@@ -504,6 +513,8 @@ int currentSkipCount;
 }
 
 -(void)queryForContent {
+    
+    _currentlyQuerying = true;
     
     NSCalendar *cal = [NSCalendar currentCalendar];
     NSDateComponents *components = [cal components:( NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond ) fromDate:[[NSDate alloc] init]];
@@ -521,6 +532,7 @@ int currentSkipCount;
     [query setLimit:100];
     [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
         if (error) {
+            _currentlyQuerying = false;
         } else {
 
             self.contentArray = [objects mutableCopy];
@@ -532,6 +544,8 @@ int currentSkipCount;
             int i = 0;
             
             PFObject *lastObject = [self.contentArray lastObject];
+            
+            _currentlyQuerying = false;
             
             if ([lastObject.objectId isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastSeenContentId"]]) {
                 [self showReplayView];
@@ -568,6 +582,8 @@ int currentSkipCount;
 
 -(void)replayQuery {
     
+    _currentlyQuerying = true;
+    
     [self.view addSubview:self.indicator];
     [self.indicator setHidden:NO];
     [self.indicator startAnimating];
@@ -589,6 +605,8 @@ int currentSkipCount;
     [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
         if (error) {
         } else {
+            
+            _currentlyQuerying = false;
             self.contentArray = [objects mutableCopy];
             NSArray* reversedArray = [[self.contentArray reverseObjectEnumerator] allObjects];
             self.contentArray = [reversedArray mutableCopy];

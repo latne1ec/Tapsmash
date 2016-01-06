@@ -195,11 +195,11 @@
                                     <constraint firstAttribute="height" constant="172" id="lSY-Ii-4rK"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vX7-sc-RYS">
-                                <rect key="frame" x="12" y="13" width="50" height="35"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vX7-sc-RYS">
+                                <rect key="frame" x="15" y="13" width="50" height="35"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="50" id="EkG-h1-Ayd"/>
-                                    <constraint firstAttribute="height" constant="35" id="TCR-Hp-RRB"/>
+                                    <constraint firstAttribute="width" constant="50" id="4Na-eM-ckC"/>
+                                    <constraint firstAttribute="height" constant="35" id="XRy-M9-xWe"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="AvenirNext-Bold" family="Avenir Next" pointSize="21"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -222,17 +222,17 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="mbL-gs-a2o" firstAttribute="top" secondItem="nTV-z6-4L9" secondAttribute="bottom" constant="48" id="6tt-Yx-eay"/>
-                            <constraint firstItem="vX7-sc-RYS" firstAttribute="leading" secondItem="ZeL-Y2-1na" secondAttribute="leadingMargin" constant="-4" id="EUT-hf-JV6"/>
+                            <constraint firstItem="vX7-sc-RYS" firstAttribute="top" secondItem="ZeL-Y2-1na" secondAttribute="topMargin" constant="13" id="CT4-kd-yNM"/>
                             <constraint firstItem="2Iv-gG-Y6d" firstAttribute="top" secondItem="ZeL-Y2-1na" secondAttribute="top" id="FBQ-2N-xdu"/>
                             <constraint firstItem="nTV-z6-4L9" firstAttribute="leading" secondItem="ZeL-Y2-1na" secondAttribute="leadingMargin" constant="-1" id="KsS-bQ-CkW"/>
                             <constraint firstItem="XAX-S1-v61" firstAttribute="bottom" secondItem="mbL-gs-a2o" secondAttribute="top" id="QvH-HX-bVM"/>
                             <constraint firstItem="jK3-hs-1lv" firstAttribute="bottom" secondItem="mbL-gs-a2o" secondAttribute="top" id="acz-zN-GEy"/>
                             <constraint firstItem="2Iv-gG-Y6d" firstAttribute="leading" secondItem="ZeL-Y2-1na" secondAttribute="leading" id="ank-kj-SRO"/>
                             <constraint firstItem="jK3-hs-1lv" firstAttribute="leading" secondItem="XAX-S1-v61" secondAttribute="leading" id="bC1-a1-idi"/>
+                            <constraint firstItem="vX7-sc-RYS" firstAttribute="leading" secondItem="nTV-z6-4L9" secondAttribute="leading" id="cbB-tm-Xno"/>
                             <constraint firstItem="2Iv-gG-Y6d" firstAttribute="leading" secondItem="XAX-S1-v61" secondAttribute="leading" id="dda-TX-3r6"/>
                             <constraint firstItem="2Iv-gG-Y6d" firstAttribute="bottom" secondItem="mbL-gs-a2o" secondAttribute="top" id="kui-7N-K9Z"/>
                             <constraint firstItem="2Iv-gG-Y6d" firstAttribute="top" secondItem="XAX-S1-v61" secondAttribute="top" id="mSE-dw-gq9"/>
-                            <constraint firstItem="vX7-sc-RYS" firstAttribute="top" secondItem="ZeL-Y2-1na" secondAttribute="topMargin" constant="13" id="niu-as-rAq"/>
                             <constraint firstItem="jK3-hs-1lv" firstAttribute="trailing" secondItem="XAX-S1-v61" secondAttribute="trailing" id="s7f-Hh-eLo"/>
                             <constraint firstItem="nTV-z6-4L9" firstAttribute="centerX" secondItem="XAX-S1-v61" secondAttribute="centerX" id="uJy-1e-LYc"/>
                             <constraint firstItem="2Iv-gG-Y6d" firstAttribute="trailing" secondItem="XAX-S1-v61" secondAttribute="trailing" id="xvp-nd-ayw"/>

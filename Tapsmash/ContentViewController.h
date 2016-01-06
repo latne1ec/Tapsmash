@@ -45,6 +45,7 @@
 
 @property (weak, nonatomic) IBOutlet UIImageView *bottomFade;
 
+@property (weak, nonatomic) IBOutlet UIButton *likeButton;
 
 
 @end

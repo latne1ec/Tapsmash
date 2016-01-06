@@ -24,7 +24,6 @@
     [Parse setApplicationId:@"BbBVj41yKW4irlVK97Jys9iGFhe74bap3MHM4usH"
                   clientKey:@"araO3PcrVxnYtVbPJy5B3TJ8EccZjItOBVBVymv0"];
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
-    
 
     [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:0.161 green:0.157 blue:0.157 alpha:1]];
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
@@ -58,7 +57,6 @@
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
     
-    
     if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"localUser"] isEqualToString:@"YES"]) {
         //do something
         
@@ -91,7 +89,13 @@
         
         NSString *userId = [[NSUserDefaults standardUserDefaults] objectForKey:@"userId"];
         
+        PFACL *acl = [PFACL new];
+        PFRole *role = [PFRole new];
+        [acl setWriteAccess:false forRole:role];
+        
+        
         PFObject *newUser = [PFObject objectWithClassName:@"CustomUser"];
+        [newUser setACL:acl];
         [newUser setObject:userId forKey:@"userId"];
         [newUser incrementKey:@"userScore" byAmount:[NSNumber numberWithInt:[[[NSUserDefaults standardUserDefaults] objectForKey:@"localUserScore"] intValue]]];
         [newUser incrementKey:@"runCount"];
