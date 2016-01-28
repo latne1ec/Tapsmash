@@ -73,15 +73,6 @@
                 
                 _currentUser = object;
                 
-                [self.currentUser incrementKey:@"runCount"];
-                [self.currentUser setObject:[NSNumber numberWithInt:currentUserScore] forKey:@"userScore"];
-                [self.currentUser saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-                    if (error) {
-                        
-                    } else {
-                        
-                    }
-                }];
             }
         }];
         

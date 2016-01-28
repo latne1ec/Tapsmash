@@ -79,6 +79,7 @@
              if ([_appDelegate currentUser] != nil) {
                  int currentUserScore = [[[NSUserDefaults standardUserDefaults] objectForKey:@"localUserScore"] intValue];
                  [[_appDelegate currentUser] setObject:[NSNumber numberWithInt:currentUserScore] forKey:@"userScore"];
+                 [[_appDelegate currentUser] incrementKey:@"runCount"];
                  [[_appDelegate currentUser] saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
                      if (error) {
                          
@@ -108,4 +109,5 @@
     
     [self startShow];
 }
+
 @end

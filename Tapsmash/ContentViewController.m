@@ -71,12 +71,7 @@ int currentSkipCount;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
 
     [self.navigationController setNavigationBarHidden:YES];
-    
-//    if([UIScreen mainScreen].bounds.size.height <= 568.0) {
-//        [self.subtitleLabel setFont:[UIFont boldSystemFontOfSize:19.0]];
-//    } else {
-//        [self.subtitleLabel setFont:[UIFont boldSystemFontOfSize:20.0]];
-//    }
+
     
     self.subtitleLabel.adjustsFontSizeToFitWidth = YES;
     self.subtitleLabel.minimumScaleFactor = 0;
@@ -216,7 +211,9 @@ int currentSkipCount;
         self.contentCountLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.contentArray.count - currentIndex];
         
         if ([[currentContent objectForKey:@"postType"] rangeOfString:@"video"].location != NSNotFound) {
+            
         }
+        
         [self.avPlayer pause];
         [self displayContent];
     }
@@ -291,11 +288,6 @@ int currentSkipCount;
 -(void)displayContent {
     
     PFObject *currentContent = [self.contentArray objectAtIndex:currentIndex];
-    
-    if ([[currentContent objectForKey:@"postType"] isEqualToString:@"web"]) {
-        
-        [self showWebviewContent];
-    }
     
     if ([[currentContent objectForKey:@"postType"] rangeOfString:@"video"].location != NSNotFound) {
         
@@ -391,73 +383,6 @@ int currentSkipCount;
 
 //// ********************* VIDEO
 
-
--(void)showWebviewContent {
-    
-    PFObject *currentContent = [self.contentArray objectAtIndex:currentIndex];
-    
-    if (floor(NSFoundationVersionNumber) < NSFoundationVersionNumber_iOS_7_1) {
-        
-        self.regWebview = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-        self.regWebview.backgroundColor = [UIColor blackColor];
-        self.regWebview.scrollView.decelerationRate = UIScrollViewDecelerationRateNormal;
-        self.regWebview.delegate = self;
-        self.regWebview.scrollView.bounces = YES;
-        self.regWebview.scrollView.scrollEnabled = NO;
-        //self.webview.userInteractionEnabled = NO;
-        //[self.regWebview addObserver:self forKeyPath:@"estimatedProgress" options:NSKeyValueObservingOptionNew context:NULL];
-        
-        NSString *urlString = [currentContent objectForKey:@"postLink"];
-        NSURL *url = [NSURL URLWithString:urlString];
-        NSURLRequest *request = [NSURLRequest requestWithURL:url];
-        [self.regWebview loadRequest:request];
-        [self.view addSubview:self.regWebview];
-        
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap)];
-        tap.numberOfTapsRequired = 1;
-        [self.regWebview addGestureRecognizer:tap];
-        
-        [self.regWebview addSubview:self.indicator];
-        [self.indicator setHidden:NO];
-        [self.indicator startAnimating];
-        
-    }
-    
-    else {
-        
-        NSString *source = @"document.body.style.background = \"#000000\";";
-        WKWebViewConfiguration *config = [[WKWebViewConfiguration alloc] init];
-        WKUserContentController *controller = [[WKUserContentController alloc] init];
-        config.userContentController = controller;
-        WKUserScript *script = [[WKUserScript alloc] initWithSource:source injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:YES];
-        [controller addUserScript:script];
-        
-        self.webview = [[WKWebView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) configuration:config];  ///MADE THIS * 2
-        
-        self.webview.backgroundColor = [UIColor blackColor];
-        self.webview.scrollView.decelerationRate = UIScrollViewDecelerationRateNormal;
-        self.webview.navigationDelegate = self;
-        self.webview.scrollView.bounces = YES;
-        self.webview.scrollView.scrollEnabled = NO;
-        //self.webview.userInteractionEnabled = NO;
-        [self.webview addObserver:self forKeyPath:@"estimatedProgress" options:NSKeyValueObservingOptionNew context:NULL];
-        
-        NSString *urlString = [currentContent objectForKey:@"postLink"];
-        NSURL *url = [NSURL URLWithString:urlString];
-        NSURLRequest *request = [NSURLRequest requestWithURL:url];
-        [self.webview loadRequest:request];
-        [self.view addSubview:self.webview];
-    
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap)];
-        tap.numberOfTapsRequired = 1;
-        [self.webview addGestureRecognizer:tap];
-        
-        [self.webview addSubview:self.indicator];
-        [self.indicator setHidden:NO];
-        [self.indicator startAnimating];
-    }
-}
-
 -(void)showPicture {
     
     [self.avPlayer pause];
@@ -474,7 +399,6 @@ int currentSkipCount;
     self.subtitleLabel.text = [currentContent objectForKey:@"postTitle"];
     
     SDWebImageManager *managerOne = [SDWebImageManager sharedManager];
-    
     
     NSString *urlString = [currentContent objectForKey:@"postLink"];
     NSURL *url = [NSURL URLWithString:urlString];
@@ -519,7 +443,7 @@ int currentSkipCount;
     NSCalendar *cal = [NSCalendar currentCalendar];
     NSDateComponents *components = [cal components:( NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond ) fromDate:[[NSDate alloc] init]];
     
-    [components setHour:-29];
+    [components setHour:-48];
     [components setMinute:0];
     [components setSecond:0];
     NSDate *yesterday = [cal dateByAddingComponents:components toDate: [NSDate date] options:0];
@@ -534,6 +458,10 @@ int currentSkipCount;
         if (error) {
             _currentlyQuerying = false;
         } else {
+            
+            if (objects.count == 0) {
+                
+            }
 
             self.contentArray = [objects mutableCopy];
             
@@ -591,7 +519,7 @@ int currentSkipCount;
     NSCalendar *cal = [NSCalendar currentCalendar];
     NSDateComponents *components = [cal components:( NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond ) fromDate:[[NSDate alloc] init]];
     
-    [components setHour:-29];
+    [components setHour:-48];
     [components setMinute:0];
     [components setSecond:0];
     NSDate *yesterday = [cal dateByAddingComponents:components toDate: [NSDate date] options:0];

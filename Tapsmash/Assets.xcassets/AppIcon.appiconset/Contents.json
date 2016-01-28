@@ -23,13 +23,12 @@
     {
       "size" : "60x60",
       "idiom" : "iphone",
-      "filename" : "poo55x120.png",
+      "filename" : "wack2x120.png",
       "scale" : "2x"
     },
     {
-      "size" : "60x60",
       "idiom" : "iphone",
-      "filename" : "poo55x180.png",
+      "size" : "60x60",
       "scale" : "3x"
     }
   ],

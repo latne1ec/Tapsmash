@@ -15,6 +15,9 @@
 		20CDB8521C1F478900E2DD29 /* OldUser in Resources */ = {isa = PBXBuildFile; fileRef = 20CDB8511C1F478900E2DD29 /* OldUser */; };
 		20D7DAF81C2AE3D9002099A8 /* OldWelcomeVC in Resources */ = {isa = PBXBuildFile; fileRef = 20D7DAF71C2AE3D9002099A8 /* OldWelcomeVC */; };
 		20D7DB851C345526002099A8 /* TableCellFade.png in Resources */ = {isa = PBXBuildFile; fileRef = 20D7DB841C345526002099A8 /* TableCellFade.png */; };
+		20D7DC231C3DD248002099A8 /* imessage@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 20D7DC221C3DD248002099A8 /* imessage@2x.png */; };
+		20D7DC251C3DD3A5002099A8 /* facebook@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 20D7DC241C3DD3A5002099A8 /* facebook@2x.png */; };
+		20D7DC2D1C3DD9D4002099A8 /* add@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 20D7DC2C1C3DD9D4002099A8 /* add@2x.png */; };
 		20D848A51C14D50600185047 /* rainbow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 20D848A41C14D50600185047 /* rainbow@2x.png */; };
 		20D848A91C15128500185047 /* panda@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 20D848A81C15128500185047 /* panda@2x.png */; };
 		20D848AB1C15308300185047 /* pandaTwo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 20D848AA1C15308300185047 /* pandaTwo@2x.png */; };
@@ -130,6 +133,9 @@
 		20CDB8511C1F478900E2DD29 /* OldUser */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = OldUser; sourceTree = "<group>"; };
 		20D7DAF71C2AE3D9002099A8 /* OldWelcomeVC */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = OldWelcomeVC; sourceTree = "<group>"; };
 		20D7DB841C345526002099A8 /* TableCellFade.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TableCellFade.png; sourceTree = "<group>"; };
+		20D7DC221C3DD248002099A8 /* imessage@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "imessage@2x.png"; sourceTree = "<group>"; };
+		20D7DC241C3DD3A5002099A8 /* facebook@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "facebook@2x.png"; sourceTree = "<group>"; };
+		20D7DC2C1C3DD9D4002099A8 /* add@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "add@2x.png"; sourceTree = "<group>"; };
 		20D848A41C14D50600185047 /* rainbow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "rainbow@2x.png"; path = "../../In App Images/rainbow@2x.png"; sourceTree = "<group>"; };
 		20D848A81C15128500185047 /* panda@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "panda@2x.png"; path = "../../In App Images/panda@2x.png"; sourceTree = "<group>"; };
 		20D848AA1C15308300185047 /* pandaTwo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pandaTwo@2x.png"; path = "../../In App Images/pandaTwo@2x.png"; sourceTree = "<group>"; };
@@ -310,6 +316,9 @@
 		20CDB84E1C1DE2A500E2DD29 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				20D7DC2C1C3DD9D4002099A8 /* add@2x.png */,
+				20D7DC241C3DD3A5002099A8 /* facebook@2x.png */,
+				20D7DC221C3DD248002099A8 /* imessage@2x.png */,
 				20D7DB841C345526002099A8 /* TableCellFade.png */,
 				20E61FD11C245DC700FAC8BE /* poopIcon@2x.png */,
 				20CDB84C1C1C016800E2DD29 /* pandaPic2@2x.png */,
@@ -695,6 +704,7 @@
 				20ECA5601BBC85960044F0D0 /* ProgressHUD.bundle in Resources */,
 				20D848B31C1616FA00185047 /* colors@2x.png in Resources */,
 				20D848AF1C153AAF00185047 /* pandaNew@2x.png in Resources */,
+				20D7DC231C3DD248002099A8 /* imessage@2x.png in Resources */,
 				20ECA49A1BBAC8CA0044F0D0 /* 3@2x.png in Resources */,
 				20E61FD21C245DC700FAC8BE /* poopIcon@2x.png in Resources */,
 				20DD3D441C10CF110063F7B1 /* chatface@2x.png in Resources */,
@@ -710,6 +720,7 @@
 				20D848AD1C1534C500185047 /* pandaFull@2x.png in Resources */,
 				20CDB8521C1F478900E2DD29 /* OldUser in Resources */,
 				20D848A51C14D50600185047 /* rainbow@2x.png in Resources */,
+				20D7DC2D1C3DD9D4002099A8 /* add@2x.png in Resources */,
 				20D848A91C15128500185047 /* panda@2x.png in Resources */,
 				2076C6BE1C06AB86003ECC49 /* poomoji.jpg in Resources */,
 				20CDB8501C1DEC4100E2DD29 /* Youtube Code in Resources */,
@@ -717,6 +728,7 @@
 				20D848B71C16A41200185047 /* randomPanda@2x.png in Resources */,
 				20FDC8E51BFE8FD800252A9C /* Poomoji@2x.png in Resources */,
 				20D848B51C16189000185047 /* yellow@2x.png in Resources */,
+				20D7DC251C3DD3A5002099A8 /* facebook@2x.png in Resources */,
 				20ECA4571BB9FF240044F0D0 /* Assets.xcassets in Resources */,
 				20ECA4991BBAC8CA0044F0D0 /* 2@2x.png in Resources */,
 				20D848AB1C15308300185047 /* pandaTwo@2x.png in Resources */,
