@@ -11,8 +11,11 @@
 #import <WebKit/WebKit.h>
 #import <AVFoundation/AVFoundation.h>
 #import "YTPlayerView.h"
+#import "Tapsmash-swift.h"
+#import "ProgressHUD.h"
 
-@interface ContentViewController : UIViewController <YTPlayerViewDelegate, UIWebViewDelegate, WKNavigationDelegate>
+
+@interface ContentViewController : UIViewController <YTPlayerViewDelegate, UIWebViewDelegate, WKNavigationDelegate, UIGestureRecognizerDelegate>
 
 
 @property (nonatomic, strong) WKWebView *webview;
@@ -21,6 +24,11 @@
 @property (nonatomic, strong) AVURLAsset *urlAsset;
 @property (nonatomic, strong) AVPlayerItem *avPlayerItem;
 @property (nonatomic, strong) AVPlayer *avPlayer;
+@property (nonatomic, strong) AVPlayer *avPlayerTwo;
+@property (nonatomic, strong) AVAsset *avAssetTwo;
+@property (nonatomic, strong) AVURLAsset *urlAssetTwo;
+@property (nonatomic, strong) AVPlayerItem *avPlayerItemTwo;
+@property (nonatomic, strong) AVPlayerLayer *avPlayerLayerTwo;
 @property (nonatomic, strong) AVQueuePlayer *qPlayer;
 @property (nonatomic, strong) AVPlayerLayer *avPlayerLayer;
 @property (nonatomic, strong) NSTimer *dasTimer;
@@ -29,6 +37,7 @@
 @property (nonatomic, strong) UIButton *closeButton;
 @property (nonatomic, strong) UIActivityIndicatorView *indicator;
 
+@property (nonatomic, strong) Interactor *interactor;
 
 @property (nonatomic, strong) NSMutableArray *contentArray;
 @property (nonatomic, strong) NSMutableArray *videoArray;
@@ -36,16 +45,17 @@
 @property (nonatomic, strong) NSMutableArray *viewedPosts;
 
 @property (weak, nonatomic) IBOutlet UILabel *contentCountLabel;
-
 @property (weak, nonatomic) IBOutlet UILabel *subtitleLabel;
-
 @property (nonatomic, strong) UIWebView *regWebview;
-
 @property (nonatomic, strong) UIButton *replayButton;
+@property (weak, nonatomic) IBOutlet UIImageView *topFade;
 
 @property (weak, nonatomic) IBOutlet UIImageView *bottomFade;
-
 @property (weak, nonatomic) IBOutlet UIButton *likeButton;
+@property (weak, nonatomic) IBOutlet UIButton *shareButton;
+
+@property (nonatomic, strong) NSArray *objectsToShare;
+
 
 
 @end

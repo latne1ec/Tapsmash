@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
+#import "Tapsmash-swift.h"
+
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
@@ -15,6 +17,12 @@
 
 @property (nonatomic, strong) NSString *currentSkipCountString;
 @property (nonatomic, strong) PFObject *currentUser;
+@property (nonatomic, strong) NSMutableArray *userPhotos;
+@property (nonatomic, strong) NSMutableArray *userVideos;
 
+
+-(void)registerUserForOneSignalPushNotifications;
+-(NSMutableArray *)getUserPhotos;
+-(NSMutableArray *)getUserVideos;
 
 @end

@@ -9,17 +9,17 @@
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
 
-
-@interface WelcomeViewController : UIViewController <UIGestureRecognizerDelegate>
+@interface WelcomeViewController : UIViewController <UIGestureRecognizerDelegate, UIViewControllerTransitioningDelegate>
 
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 @property (weak, nonatomic) IBOutlet UIButton *playButton;
 @property (nonatomic) int *currentSkipCount;
 @property (weak, nonatomic) IBOutlet UILabel *playLabel;
-
 @property (nonatomic, strong) PFObject *currentUser;
 
-
 - (IBAction)playButtonTapped:(id)sender;
+
+
+@property (weak, nonatomic) IBOutlet UIButton *uploadButton;
 
 @end
