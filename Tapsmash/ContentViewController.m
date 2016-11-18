@@ -260,11 +260,8 @@ int canSkip;
     [[NSUserDefaults standardUserDefaults] synchronize];
     
     if (_replayViewShowing) {
-     
         [self performSelector:@selector(fadehome) withObject:nil afterDelay:0.63];
-        
     }
-    
     if (_currentlyQuerying) {
         [self performSelector:@selector(fadehome) withObject:nil afterDelay:0.63];
     }
@@ -411,7 +408,7 @@ int canSkip;
     _playerBPlaying = false;
     
     if (canSkip == 1) {
-        NSLog(@"ddd");
+        
     } else {
     
         if (_replayViewShowing) {
@@ -442,7 +439,7 @@ int canSkip;
             [self.dasTimer invalidate];
             
         } else {
-        
+            
             currentIndex = currentIndex + 1;
             
             PFObject *currentContent = [self.contentArray objectAtIndex:currentIndex];
@@ -457,7 +454,7 @@ int canSkip;
 }
 
 -(void)displayContent {
-
+    
     canSkip = 1;
     
     PFObject *currentContent = [self.contentArray objectAtIndex:currentIndex];
@@ -485,7 +482,6 @@ int canSkip;
     
     [self.avPlayer pause];
     [self.avPlayerTwo pause];
-    NSLog(@"show pic");
     
     PFObject *currentContent = [self.contentArray objectAtIndex:currentIndex];
     
@@ -671,7 +667,7 @@ int canSkip;
                         
                         currentIndex = i;
                         [self displayContent];
-                        [self downloadImages];
+                        //[self downloadImages];
                         [self getVideos];
                         [self setupTimer];
                         self.contentCountLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.contentArray.count-currentIndex];
@@ -682,12 +678,15 @@ int canSkip;
                     } 
                 }
                 
+                NSLog(@"here 2");
             [self.updatedVideoArray removeAllObjects];
             [self displayContent];
-            [self downloadImages];
+            //[self downloadImages];
+                NSLog(@"here 1");
             [self getVideos];
             [self checkIfFirstObjectIsVideo];
             [self setupTimer];
+                NSLog(@"here");
             [self addTapTapRecoginzer];
             self.contentCountLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.contentArray.count];
                 
@@ -810,8 +809,6 @@ int canSkip;
         CMTime thumbTime = CMTimeMakeWithSeconds(0,1);
         
         AVAssetImageGeneratorCompletionHandler handler = ^(CMTime requestedTime, CGImageRef im, CMTime actualTime, AVAssetImageGeneratorResult result, NSError *error){
-            
-            NSLog(@"result: %@", im);
             
         };
 
