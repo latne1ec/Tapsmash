@@ -12,33 +12,41 @@ class DismissAnimator : NSObject {
 }
 
 extension DismissAnimator : UIViewControllerAnimatedTransitioning {
-    func transitionDuration(transitionContext: UIViewControllerContextTransitioning?) -> NSTimeInterval {
-        return 0.26
+    public func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+        return 2.0
     }
-    
-    func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
-        guard
-            let fromVC = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey),
-            let toVC = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey),
-            let containerView = transitionContext.containerView()
-            else {
-                return
-        }
+
+    public func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         
-        containerView.insertSubview(toVC.view, belowSubview: fromVC.view)
-        
-        let screenBounds = UIScreen.mainScreen().bounds
-        let bottomLeftCorner = CGPoint(x: 0, y: screenBounds.height)
-        let finalFrame = CGRect(origin: bottomLeftCorner, size: screenBounds.size)
-        
-        UIView.animateWithDuration(
-            transitionDuration(transitionContext),
-            animations: {
-                fromVC.view.frame = finalFrame
-            },
-            completion: { _ in
-                transitionContext.completeTransition(!transitionContext.transitionWasCancelled())
-            }
-        )
     }
+
+//    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+//        return 0.26
+//    }
+//    
+//    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+//        guard
+//            let fromVC = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.from),
+//            let toVC = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to),
+//            //let containerView = transitionContext.containerView
+//            else {
+//                return
+//        }
+//        
+//        containerView.insertSubview(toVC.view, belowSubview: fromVC.view)
+//        
+//        let screenBounds = UIScreen.main.bounds
+//        let bottomLeftCorner = CGPoint(x: 0, y: screenBounds.height)
+//        let finalFrame = CGRect(origin: bottomLeftCorner, size: screenBounds.size)
+//        
+//        UIView.animate(
+//            withDuration: transitionDuration(using: transitionContext),
+//            animations: {
+//                fromVC.view.frame = finalFrame
+//            },
+//            completion: { _ in
+//                transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+//            }
+//        )
+//    }
 }

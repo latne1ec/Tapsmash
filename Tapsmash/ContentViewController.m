@@ -118,8 +118,8 @@ int canSkip;
     self.avPlayerLayer.hidden = YES;
     self.avPlayerLayerTwo.hidden = YES;
     
-    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
-    [self.view addGestureRecognizer:pan];
+//    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
+//    [self.view addGestureRecognizer:pan];
     
     [self.view bringSubviewToFront:self.shareButton];
     self.shareButton.hidden = YES;
@@ -351,7 +351,7 @@ int canSkip;
     self.replayButton.center = self.view.center;
     [self.replayButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [self.replayButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateSelected];
-    self.replayButton.titleLabel.font = [UIFont fontWithName:@"AvenirNext-Bold" size:19.6];
+    self.replayButton.titleLabel.font = [UIFont fontWithName:@"AvenirNext-Heavy" size:19.0];
     self.replayButton.titleLabel.numberOfLines = 2;
     [self.replayButton.titleLabel setTextAlignment:NSTextAlignmentCenter];
     [self.replayButton setTitle:@"no new posts 🔄\ntap to replay" forState:UIControlStateNormal];

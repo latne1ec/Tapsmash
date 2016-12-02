@@ -14,12 +14,15 @@
 #import <AVFoundation/AVFoundation.h>
 #import "AssetBrowserItem.h"
 #import "SubmitContentViewController.h"
+#import "ZFModalTransitionAnimator.h"
+
 
 @interface WelcomeViewController ()
 
 @property (nonatomic, strong) AppDelegate *appDelegate;
 @property (nonatomic, strong) DismissAnimator *dismissAnimator;
 @property (nonatomic, strong) Interactor *interactor;
+@property (nonatomic, strong) ZFModalTransitionAnimator *animator;
 
 @end
 
@@ -146,11 +149,26 @@
 -(void)startShow {
     
     ContentViewController *cvc = [self.storyboard instantiateViewControllerWithIdentifier:@"Content"];
-    //cvc.view.layer.speed = 2.0;
-    cvc.modalPresentationStyle = UIModalPresentationCurrentContext;
-    cvc.transitioningDelegate = self;
-    cvc.interactor = self.interactor;
-    [self presentViewController:cvc animated:NO completion:nil];
+//    cvc.view.layer.speed = 2.0;
+//    cvc.modalPresentationStyle = UIModalPresentationCurrentContext;
+//    cvc.transitioningDelegate = self;
+//    cvc.interactor = self.interactor;
+//    [self presentViewController:cvc animated:NO completion:nil];
+    
+    
+    cvc.modalPresentationStyle = UIModalPresentationFullScreen;
+    
+    self.animator = [[ZFModalTransitionAnimator alloc] initWithModalViewController:cvc];
+    self.animator.bounces = NO;
+    self.animator.dragable = true;
+    self.animator.behindViewAlpha = 0.88f;
+    self.animator.behindViewScale = 1.0f;
+    self.animator.transitionDuration = 0.23f;
+    self.animator.direction = ZFModalTransitonDirectionBottom;
+        
+    cvc.transitioningDelegate = self.animator;
+    [self presentViewController:cvc animated:YES completion:nil];
+
     
 }
 

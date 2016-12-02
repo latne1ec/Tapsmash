@@ -25,8 +25,17 @@
 
     [PFImageView class];
     [Parse enableLocalDatastore];
-    [Parse setApplicationId:@"BbBVj41yKW4irlVK97Jys9iGFhe74bap3MHM4usH"
-                  clientKey:@"araO3PcrVxnYtVbPJy5B3TJ8EccZjItOBVBVymv0"];
+//    [Parse setApplicationId:@"BbBVj41yKW4irlVK97Jys9iGFhe74bap3MHM4usH"
+//                  clientKey:@"araO3PcrVxnYtVbPJy5B3TJ8EccZjItOBVBVymv0"];
+    
+    
+    [Parse initializeWithConfiguration:[ParseClientConfiguration configurationWithBlock:^(id<ParseMutableClientConfiguration> configuration) {
+        configuration.applicationId = @"YOUR_APP_ID";
+        configuration.server = @"http://YOUR_PARSE_SERVER:1337/parse";
+    }]];
+    
+    
+    
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
     
